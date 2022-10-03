@@ -144,3 +144,27 @@ class DealService:
         if len(user) == 0:
             return False
         return True
+
+    async def set_products_to_deal(self):
+        products = [
+            {
+                'productName': f'{product.Nomenclature}. {product.Characteristic}',
+                'price': product.Price,
+                'quantity': product.Quantity,
+                "tax_rate": self.get_tax_rate(product.VAT),
+                "taxIncluded": "Y",
+
+            }
+            for product in self.data.ProductsData
+        ]
+
+        data = {
+            'ownerType': 'D',
+            'ownerId': int(self.deal_pk),
+            'productRows': products
+        }
+        logging.info(data)
+        return await b.call(
+            'crm.item.productrow.set',
+            data
+        )
