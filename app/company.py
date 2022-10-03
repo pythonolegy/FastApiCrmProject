@@ -50,3 +50,10 @@ class CompanyService:
         self.action = 'add'
         return self.add_company
 
+    def get_contact_information_type(self, key: str):
+        data = self.data.ContractorData.Contacts
+        result = [x for x in data if x.ContactInfoType == key]
+        if len(result) > 0:
+            return result[0].View
+        return ''
+
