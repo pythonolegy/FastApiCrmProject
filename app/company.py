@@ -38,3 +38,14 @@ class CompanyService:
             }
         })
 
+    def exist_company_details(self) -> bool:
+        if len(self.company_details['requisite']) == 0:
+            return False
+        return True
+
+    def get_company_action(self) -> Callable:
+        if self.exist_company_details():
+            self.action = 'update'
+            return self.update_company
+        return self.add_company
+
