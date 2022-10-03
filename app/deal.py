@@ -31,6 +31,20 @@ class DealService:
         return {'result': 200}
 
     async def get_deal_action(self) -> Callable:
+        """
+       The function determines the values of the 'action' parameter and passes it to the add/update function call
+
+        *** Verification ***
+        In the current company by INN and 'Account number':
+        1. If a transaction by INN is found, it is simply updated
+        2. If not found according to the data above, then we check only the 'Account Number' and if found,
+        then we update the transaction and the 'COMPANY_ID'
+        3. If both actions failed and the transaction was not found, then,
+        by 'COMPANY_ID' we are looking for a deal in bitrix, if found, then we take the first one that comes along,
+        and if there is no 'Account Number', then we update the transaction,
+        and so iterate over all the company's transactions until we find a deal without a 'Number account'
+        4. If each transaction has an 'Account Number', then create a new transaction
+        """
         # The first case --- find a deal by the INN of the company and the account number of the transaction
         self.deal = await self.get_deal()
         if self.exist_deal_details():
