@@ -86,3 +86,20 @@ class CompanyService:
             return [{"VALUE": emails[0]}, {"VALUE": emails[1]}]
         return [{"VALUE": data}]
 
+    async def get_user(self):
+        return await b.call(
+            'user.get',
+            {
+                'FILTER': {
+                    "LAST_NAME": self.data.ManagerSurname,
+                    "NAME": self.data.ManagerName
+                }
+            }
+        )
+
+    def exist_user(self, user):
+        if len(user) == 0:
+            return False
+        return True
+
+
