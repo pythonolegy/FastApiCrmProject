@@ -43,5 +43,6 @@ async def post_deal_update(data: Order):
         logging.error(err)
         return JSONResponse({'result': False}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 if __name__ == "__main__":
     uvicorn.run('server:app', port=5000, host='localhost')
