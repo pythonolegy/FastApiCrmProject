@@ -27,3 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(filename)s %(levelname)s: %(message)s')
+
