@@ -1,0 +1,65 @@
+{
+  "DocumentTitle":"Example",
+  "Number":"abc-123",
+  "Date":"2022-05-31T18:00:31",
+  "Warehouse":"Example",
+  "WarehouseID":"12345-abcde",
+  "Contract":"Contract №123",
+  "ContractID":"12345-abcde",
+  "ProductData":[
+    {
+      "Nomenclature":"Example (т)",
+      "NomenclatureID":"12345-abcde",
+      "Characteristic":"530х8 steel",
+      "CharacteristicID":"12345-abcde",
+      "Price":5230,
+      "Quantity":100,
+      "VAT":106.67
+    },
+    {
+      "Nomenclature":"Example (т)",
+      "NomenclatureID":"12345-abcde",
+      "Characteristic":"530х8 steel",
+      "CharacteristicID":"12345-abcde",
+      "Price":5230,
+      "Quantity":100,
+      "VAT":106.67
+    }
+  ],
+  "ContragentData":{
+    "Title":"Example \"Example\"",
+    "INN  ":"12345",
+    "KPP":"12345",
+    "OKPO":"12345",
+    "SettlementAccount":"12345",
+    "CorrespondentAccount":"12345",
+    "BIK":"12345",
+    "Bank":"Some \"Example\"",
+    "ManegerFullName":"James Bond",
+    "ManagerStatus":"Director",
+    "CardPosition": "Director",
+    "Contacts":[
+      {
+        "ContactInfoType":"Real adress",
+        "View":"111, some address"
+      },
+      {
+        "ContactInfoType":"Post address",
+        "View":"111, some address"
+      },
+      {
+        "ContactInfoType":"Phone",
+        "View":"(1234) 12345"
+      },
+      {
+        "ContactInfoType":"Office address",
+        "View":"111, some address"
+      }
+    ]
+  },
+  "AdditionalData":{
+    "SpecNum":"7",
+    "SpecDate":"2022-05-31T00:00:00",
+    "DeliveryTerms":"1.1.  #В"
+  }
+}
