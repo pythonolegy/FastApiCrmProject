@@ -24,3 +24,22 @@ header = {'Authorization': 'Token ' + api_token,
           'Content-Type': 'application/json'}
 logging.basicConfig(format=u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s',
                     level=logging.INFO)
+
+
+def send_alert_message(error_msg, error_status=error_status_default):
+    request_data = {
+        "project_id": project_id,
+        "error_description": error_msg,
+        "date_time": str(datetime.now(tz=pytz.timezone(''))),
+        "error_status": error_status,
+
+        # Optional fields
+        "trace": format_exc(),
+        "docs_link": link_to_doc,
+        "git_link": link_to_git,
+        "portainer_link": link_to_portainer
+    }
+    request_data_json = json.dumps(request_data)
+    response = requests.post(url_to_error_server, data=request_data_json, headers=header)
+
+    return response
