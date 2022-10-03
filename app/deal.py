@@ -87,6 +87,64 @@ class DealService:
             }
         )
 
+    def exist_user(self, user):
+        if len(user) == 0:
+            return False
+        return True
+
+    async def put_deal(self):
+        """ The function adds/updates the transaction depending on the passed parameter 'action' """
+        # Deal statuses after the status 'Preparation of documents, completed transactions are not taken into account'
+        deal_stages = ["C13:FINAL_INVOICE", "C13:1", "C13:2", "C13:3", "C13:4"]
+        # Default status for new deals
+        deal_stage = "C13:EXECUTING"
+        # Checking the status, if the status is after the status 'Preparation of documents, then the current status remains'
+        if self.action == 'update' and self.deal[0]['STAGE_ID'] in deal_stages:
+            deal_stage = self.deal[0]['STAGE_ID']
+        # User verification, if a user with such a surname does not exist, then the user '..' is added.
+        user = await self.get_user()
+        user_id = '93'
+        if self.exist_user(user):
+            user_id = user[0]['ID']
+        logging.info(f"DEAL USER - {user}")
+        logging.info(f"DEAL USER - {user_id}")
+        data = {
+            'ID': self.deal_pk,
+            'fields': {
+                'TITLE': self.data.Number,
+                'CATEGORY_ID': 13,
+                'COMPANY_ID': self.company_pk,
+                "STAGE_ID": deal_stage,
+                "ASSIGNED_BY_ID": user_id,
+                settings.DealFields.contract_number: self.data.Contract,
+                settings.DealFields.account_number: self.data.Number,
+                settings.DealFields.invoice_formation_date: self.data.Date,
+                settings.DealFields.warehouse: self.data.Warehouse,
+                settings.DealFields.specification_number: self.data.AdditionalData.SpecNum,
+                settings.DealFields.specification_date: self.data.AdditionalData.SpecDate,
+                settings.DealFields.delivery_condition: self.data.AdditionalData.DeliveryTerms,
+                settings.DealFields.delivery_time: self.data.AdditionalData.DeliveryInWorkDays
+            }
+        }
+        logging.info(f"DEAL ACTION - {self.action}")
+        logging.info(f"DEAL DATA - {data}")
+        return await b.call(
+            f'crm.deal.{self.action}',
+            data
+        )
+
+    async def update_deal(self):
+        """
+        Calling the add/update transaction function with the action = 'update' parameter
+        * Updates the transaction by the ID of the created/updated company
+        """
+        await self.put_deal()
+        return self.deal_pk
+
+    async def add_deal(self):
+        """ Calling the add/update transaction function with the action = 'add' parameter """
+        return await self.put_deal()
+
     async def get_deal(self):
         """ The function gets the transaction by the 'Number' field from the request and/or the company ID """
         return await b.call(
@@ -139,11 +197,6 @@ class DealService:
         if product != '':
             tax_rate = '20%'
         return tax_rate
-
-    def exist_user(self, user):
-        if len(user) == 0:
-            return False
-        return True
 
     async def set_products_to_deal(self):
         products = [
