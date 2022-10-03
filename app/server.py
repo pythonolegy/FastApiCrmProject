@@ -30,3 +30,15 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(filename)s %(levelname)s: %(message)s')
 
+
+@app.post('/some-endpoint-example/deal-update')
+async def post_deal_update(data: Order):
+    """ The function starts main() with passing the data argument from .json """
+    try:
+        logging.info(f"REQUEST: {data}")
+        result = await main(data)
+        return JSONResponse(result, status_code=status.HTTP_202_ACCEPTED)
+    except Exception as err:
+        send_alert_message(f"RuntimeError: {err}")
+        logging.error(err)
+        return JSONResponse({'result': False}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
