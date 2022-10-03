@@ -1,0 +1,50 @@
+version: "3"
+services:
+
+    nginx:
+        image: nginx:1.18.0-alpine
+        container_name: steel-center-exchange-nginx
+        ports:
+            - "8888:8888"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        restart: unless-stopped
+        depends_on:
+            - backend
+        networks:
+            - project-name-exchange-network
+
+    backend:
+        container_name: project-name-exchange-main
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+        env_file:
+          - env.env
+        volumes:
+            - ./app/requests.txt:/app/requests.txt
+        command: uvicorn server:app --reload --host 0.0.0.0 --port 5000
+        restart: unless-stopped
+        networks:
+            - project-name-exchange-network
+
+    schedule:
+        container_name: project-name-exchange-schedule
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+        env_file:
+            - env.env
+        volumes:
+            - ./app/requests.txt:/app/requests.txt
+        command: python schedule.py
+        restart: unless-stopped
+        networks:
+            - project-name-exchange-network
+
+networks:
+    steel-center-exchange-1c-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: ...
