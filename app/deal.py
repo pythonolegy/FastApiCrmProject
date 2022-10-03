@@ -87,6 +87,59 @@ class DealService:
             }
         )
 
+    async def get_deal(self):
+        """ The function gets the transaction by the 'Number' field from the request and/or the company ID """
+        return await b.call(
+            'crm.deal.list',
+            {
+                'FILTER': {
+                    'COMPANY_ID': self.company_pk,
+                    settings.DealFields.account_number: self.data.Number
+                }
+            }
+        )
+
+    async def get_deal_by_field(self):
+        """ The function gets the transaction by the 'Number' field from the request and/or the company ID """
+        return await b.call(
+            'crm.deal.list',
+            {
+                'FILTER': {
+                    settings.DealFields.account_number: self.data.Number
+                }
+            }
+        )
+
+    async def get_deals_by_company_pk(self):
+        """ Returns a deal or a list of unclosed deals """
+        return await b.get_all(
+            'crm.deal.list',
+            {
+                'FILTER': {
+                    'COMPANY_ID': self.company_pk,
+                    'CLOSED': "N",
+                },
+                'SELECT': ['*', 'UF_*']
+            }
+        )
+
+    async def get_deal_id_without_field(self) -> list:
+        """
+         The function goes through the list of transactions of the company obtained by the 'COMPANY_ID' filter
+        * Returns the ID of the transaction where the 'Number' field is empty
+        """
+        deals = await self.get_deals_by_company_pk()
+        for deal in deals:
+            if deal[settings.DealFields.account_number] in self.empty_list:
+                return [deal]
+        return []
+
+    def get_tax_rate(self, product) -> str:
+        tax_rate = ''
+        if product != '':
+            tax_rate = '20%'
+        return tax_rate
+
     def exist_user(self, user):
         if len(user) == 0:
             return False
