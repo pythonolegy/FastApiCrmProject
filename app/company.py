@@ -47,5 +47,6 @@ class CompanyService:
         if self.exist_company_details():
             self.action = 'update'
             return self.update_company
+        self.action = 'add'
         return self.add_company
 
