@@ -69,3 +69,14 @@ class DealService:
         self.deal_pk = ''
         self.action = 'add'
         return self.add_deal
+
+    def exist_deal_details(self) -> bool:
+        """ The function returns True if the transaction bundle with the company exists """
+        if len(self.deal) == 0:
+            return False
+        return True
+
+    def exist_user(self, user):
+        if len(user) == 0:
+            return False
+        return True
