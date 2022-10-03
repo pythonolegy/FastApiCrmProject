@@ -57,3 +57,32 @@ class CompanyService:
             return result[0].View
         return ''
 
+    def get_company_addresses(self, company_id: str) -> list:
+        addresses = []
+        for param in settings.ADDRESS_TYPE:
+            address = self.get_contact_information_type(param["FIELD"])
+            if address == '':
+                continue
+            data = {
+                'fields': {
+                    'ENTITY_ID': company_id,
+                    'ENTITY_TYPE_ID': 4,
+                    'ADDRESS_1': address,
+                    'TYPE_ID': param["TYPE"]
+                }
+            }
+            addresses.append(data)
+        return addresses
+
+    def get_contact_data_bx(self, key: str):
+        data = self.get_contact_information_type(settings.CONTACT_INFORMATION_TYPE[key])
+        if data == '':
+            return data
+        if ' / ' in data:
+            emails = data.split(" / ")
+            return [{"VALUE": emails[0]}, {"VALUE": emails[1]}]
+        if '/' in data:
+            emails = data.split("/")
+            return [{"VALUE": emails[0]}, {"VALUE": emails[1]}]
+        return [{"VALUE": data}]
+
